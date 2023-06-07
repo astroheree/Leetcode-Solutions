@@ -11,57 +11,40 @@
  */
 class Solution {
 public:
-    void bfs(TreeNode* root, vector<vector<int>> &levelOrder)
+    bool bfs(TreeNode* root)
     {
-        if(root == NULL) return;
+        if(root == NULL) return true;
+        if(root->val % 2 == 0) return false;    
         queue<TreeNode*> q;
         q.push(root);
         q.push(NULL);
+        bool flag = false;
+        int prev = 0;
         vector<int> temp;
         while(!q.empty())
         {
             TreeNode* front = q.front();
             q.pop();
-
             if(front == NULL)
             {
-                levelOrder.push_back(temp);
-                temp.clear();
+                if(flag) prev = 0;
+                else prev = INT_MAX;
                 if(!q.empty()) q.push(NULL);
+                flag = !flag;
             }
             else
             {
+                if((flag == false) && ((prev >= front->val) || (front->val % 2 == 0))) return false; 
+                if((flag == true) && ((prev <= front->val) || (front -> val % 2 != 0))) return false;
+                prev = front->val;
                 temp.push_back(front->val);
                 if(front->left) q.push(front->left);
                 if(front->right) q.push(front->right);
             }
         }
+        return true;
     }
     bool isEvenOddTree(TreeNode* root) {
-        vector<vector<int>> levelOrder;
-        bfs(root, levelOrder);
-        for(int i = 0 ; i < levelOrder.size() ; i++)
-        {
-            int first = levelOrder[i][0];
-            if(i%2 == 0)
-            {  
-                if(first % 2 == 0) return false;
-                for(int j = 1 ; j < levelOrder[i].size() ; j++)
-                {
-                    if((levelOrder[i][j] % 2 == 0) || (first >= levelOrder[i][j])) return false; 
-                    first = levelOrder[i][j];
-                }
-            }
-            else
-            {
-                if(first % 2 != 0) return false;
-                for(int j = 1 ; j < levelOrder[i].size() ; j++)
-                {
-                    if((levelOrder[i][j] % 2 != 0) || (first <= levelOrder[i][j])) return false;
-                    first = levelOrder[i][j];
-                }
-            }
-        }
-        return true;
+        return bfs(root);
     }
 };
