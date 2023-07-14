@@ -26,10 +26,10 @@ class Solution
     // }
     int knapSack(int W, int wt[], int val[], int n) 
     { 
-        vector<vector<int>> dp(n+1,vector<int>(W+1,0));
-        for(int i = 0 ; i <= W ; i++)
+        vector<int> prev(W+1,0), curr(W+1,0);
+        for(int i = wt[0] ; i <= W ; i++)
         {
-            if(wt[0] <= i) dp[0][i] = val[0];
+            prev[i] = val[0];
         }
         for(int i = 1 ; i < n ; i++)
         {
@@ -37,13 +37,14 @@ class Solution
             {
                 int pick = -1e9;
                 if(w >= wt[i])
-                    pick = val[i] + dp[i-1][w-wt[i]];
+                    pick = val[i] + prev[w-wt[i]];
                     
-                int notPick = dp[i-1][w];
-                dp[i][w] = max(pick,notPick);
+                int notPick = prev[w];
+                curr[w] = max(pick,notPick);
             }
+            prev = curr;
         }
-        return dp[n-1][W];
+        return prev[W];
         // return solve(n-1,W,wt,val,n);
     }
 };
