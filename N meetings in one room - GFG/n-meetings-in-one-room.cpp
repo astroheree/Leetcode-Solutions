@@ -16,22 +16,14 @@ class Solution
             v.push_back({end[i],{start[i],i+1}});
         }
         sort(v.begin(),v.end());
-        int cnt = 0;
-        int eTime = 0;
+        int cnt = 1;
+        int eTime = v[0].first;
         for(int i = 0 ; i < n ; i++)
         {
-            if(i == 0)
+            if(v[i].first > eTime && v[i].second.first > eTime)
             {
                 cnt++;
                 eTime = v[i].first;
-            }
-            else
-            {
-                if(v[i].first > eTime && v[i].second.first > eTime)
-                {
-                    cnt++;
-                    eTime = v[i].first;
-                }
             }
         }
         return cnt;
